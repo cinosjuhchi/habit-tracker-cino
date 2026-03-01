@@ -1,7 +1,3 @@
-/**
- * Habit Tracker - Personal Habit Tracking Application
- * Main App Component (Modular Version)
- */
 import React, { useState, useMemo } from 'react';
 
 // Hooks
