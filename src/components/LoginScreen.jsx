@@ -134,30 +134,23 @@ const LoginScreen = ({
 
           {/* Tampilan Error Khusus Login */}
           {loginError && (
-            <div className="mt-6 text-left bg-red-50 p-4 rounded-xl border border-red-100">
-              <h4 className="font-bold text-red-800 text-sm flex items-center gap-1.5 mb-2">
-                <ShieldAlert className="w-4 h-4" /> Gagal Masuk
-              </h4>
-              <p className="text-xs text-red-600 font-mono break-all mb-3">
-                {loginError.code}
-              </p>
-              
-              {loginError.code === 'auth/unauthorized-domain' && (
-                <div className="text-xs text-slate-700">
-                  <strong className="text-slate-800">Penyebab:</strong> Domain tempat aplikasi ini berjalan belum diizinkan oleh Firebase.<br/><br/>
-                  <strong className="text-slate-800">Solusi:</strong> Tambahkan domain berikut ini:<br/>
-                  <code className="bg-slate-200 p-1 rounded font-bold block mt-1 break-all text-indigo-700">
-                    {window.location.hostname}
-                  </code>
-                  <br/>ke menu <strong>Authentication &gt; Settings &gt; Authorized domains</strong> di dashboard Firebase-mu.
-                </div>
-              )}
-
-              {loginError.code === 'auth/popup-closed-by-user' && (
-                <div className="text-xs text-slate-700">
-                  <strong className="text-slate-800">Penyebab:</strong> Popup login ditutup atau diblokir oleh browser di dalam lingkungan layar *preview* ini.<br/><br/>
-                  <strong className="text-slate-800">Solusi sementara:</strong> Gunakan tombol <strong>"Masuk sebagai Tamu"</strong> di atas untuk mencoba aplikasinya di layar ini.
-                </div>
+            <div className="mt-6 text-center bg-amber-50 p-4 rounded-xl border border-amber-100">
+              {(loginError.code === 'auth/popup-closed-by-user' || loginError.code === 'auth/cancelled-popup-request') ? (
+                <p className="text-sm text-amber-700">
+                  Login dibatalkan. Silakan coba lagi jika ingin melanjutkan.
+                </p>
+              ) : loginError.code === 'auth/network-request-failed' ? (
+                <p className="text-sm text-amber-700">
+                  Koneksi internet bermasalah. Periksa jaringanmu dan coba lagi.
+                </p>
+              ) : loginError.code === 'auth/popup-blocked' ? (
+                <p className="text-sm text-amber-700">
+                  Popup diblokir oleh browser. Izinkan popup untuk melanjutkan login.
+                </p>
+              ) : (
+                <p className="text-sm text-red-600">
+                  Terjadi kesalahan saat login. Silakan coba lagi nanti.
+                </p>
               )}
             </div>
           )}
