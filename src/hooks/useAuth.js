@@ -34,7 +34,12 @@ export const useAuth = () => {
       await signInWithPopup(auth, provider);
     } catch (error) {
       console.error("Login Error:", error);
-      setLoginError({ code: error.code, message: error.message });
+      // Jika user menutup popup atau membatalkan login
+      if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
+        setLoginError({ code: error.code, message: 'Login dibatalkan' });
+      } else {
+        setLoginError({ code: error.code, message: error.message });
+      }
       setIsLoading(false);
     }
   };
