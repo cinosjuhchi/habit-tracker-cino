@@ -3,6 +3,7 @@
  * Kredensial diambil dari environment variables untuk keamanan
  */
 import { initializeApp } from 'firebase/app';
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
@@ -34,9 +35,27 @@ const validateConfig = () => {
 let app = null;
 let auth = null;
 let db = null;
+let appCheck = null;
 
 if (validateConfig()) {
   app = initializeApp(firebaseConfig);
+  
+  // Aktifkan debug token untuk development (localhost)
+  if (import.meta.env.DEV) {
+    self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+  }
+  
+  // Inisialisasi App Check dengan reCAPTCHA v3
+  const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  if (recaptchaSiteKey) {
+    appCheck = initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider(recaptchaSiteKey),
+      isTokenAutoRefreshEnabled: true
+    });
+  } else {
+    console.warn('App Check: VITE_RECAPTCHA_SITE_KEY tidak ditemukan di .env');
+  }
+  
   auth = getAuth(app);
   db = getFirestore(app);
 }
@@ -44,5 +63,5 @@ if (validateConfig()) {
 // App ID untuk folder database
 export const APP_ID = import.meta.env.VITE_APP_ID || 'habit-tracker-cino';
 
-export { app, auth, db };
+export { app, auth, db, appCheck };
 export default firebaseConfig;
