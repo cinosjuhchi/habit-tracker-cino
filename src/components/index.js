@@ -9,3 +9,4 @@ export { default as Header } from './Header';
 export { default as WeekTabs } from './WeekTabs';
 export { default as WeekView } from './WeekView';
 export { default as SummaryView } from './SummaryView';
+export { default as ProtectedRoute } from './ProtectedRoute';
