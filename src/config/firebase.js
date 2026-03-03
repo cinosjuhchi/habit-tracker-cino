@@ -45,19 +45,25 @@ if (validateConfig()) {
     self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
   }
   
-  // Inisialisasi App Check dengan reCAPTCHA v3
+  // Inisialisasi App Check dengan reCAPTCHA v3 (opsional)
   const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
   if (recaptchaSiteKey) {
-    appCheck = initializeAppCheck(app, {
-      provider: new ReCaptchaV3Provider(recaptchaSiteKey),
-      isTokenAutoRefreshEnabled: true
-    });
+    try {
+      appCheck = initializeAppCheck(app, {
+        provider: new ReCaptchaV3Provider(recaptchaSiteKey),
+        isTokenAutoRefreshEnabled: true
+      });
+      console.log('[Firebase] App Check initialized');
+    } catch (error) {
+      console.warn('[Firebase] App Check initialization failed:', error.message);
+    }
   } else {
-    console.warn('App Check: VITE_RECAPTCHA_SITE_KEY tidak ditemukan di .env');
+    console.warn('[Firebase] App Check: VITE_RECAPTCHA_SITE_KEY tidak ditemukan di .env');
   }
   
   auth = getAuth(app);
   db = getFirestore(app);
+  console.log('[Firebase] Auth and Firestore initialized');
 }
 
 // App ID untuk folder database

@@ -16,15 +16,27 @@ export const useHabitData = (user) => {
   // Mengambil data secara Real-Time dari Firestore
   useEffect(() => {
     if (!user) {
+      console.log('[useHabitData] No user, skipping Firestore');
       setData({});
       setIsDataLoading(false);
       return;
     }
 
+    // Check if db is properly initialized
+    if (!db) {
+      console.error('[useHabitData] Firestore db is not initialized!');
+      setFatalError('Firestore tidak terinisialisasi. Cek konfigurasi Firebase.');
+      setIsDataLoading(false);
+      return;
+    }
+
+    console.log('[useHabitData] Setting up Firestore listener for user:', user.uid);
+    console.log('[useHabitData] APP_ID:', APP_ID);
     setIsDataLoading(true);
     const docRef = doc(db, 'artifacts', APP_ID, 'users', user.uid, 'habits', 'tracking_data');
     
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      console.log('[useHabitData] Firestore snapshot received, exists:', docSnap.exists());
       if (docSnap.exists()) {
         setData(docSnap.data().records || {});
       } else {
@@ -34,7 +46,7 @@ export const useHabitData = (user) => {
       setSyncStatus('synced');
       setFatalError(null);
     }, (error) => {
-      console.error("Firestore error:", error);
+      console.error("[useHabitData] Firestore error:", error.code, error.message);
       setSyncStatus('error');
       setFatalError(error.code || error.message);
       setIsDataLoading(false);
