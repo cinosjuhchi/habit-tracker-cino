@@ -15,4 +15,17 @@ export default defineConfig({
   preview: {
     historyApiFallback: true,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Split vendor chunks
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-firebase-core': ['firebase/app', 'firebase/app-check'],
+          'vendor-firebase-services': ['firebase/auth', 'firebase/firestore'],
+          'vendor-ui': ['lucide-react'],
+        },
+      },
+    },
+  },
 })
