@@ -8,4 +8,11 @@ export default defineConfig({
     react(),
     tailwindcss(), // <-- Baris ajaib 2
   ],
+  // Handle client-side routing untuk SPA
+  server: {
+    historyApiFallback: true,
+  },
+  preview: {
+    historyApiFallback: true,
+  },
 })
