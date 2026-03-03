@@ -53,17 +53,13 @@ if (validateConfig()) {
         provider: new ReCaptchaV3Provider(recaptchaSiteKey),
         isTokenAutoRefreshEnabled: true
       });
-      console.log('[Firebase] App Check initialized');
     } catch (error) {
-      console.warn('[Firebase] App Check initialization failed:', error.message);
+      // App Check initialization failed silently
     }
-  } else {
-    console.warn('[Firebase] App Check: VITE_RECAPTCHA_SITE_KEY tidak ditemukan di .env');
   }
   
   auth = getAuth(app);
   db = getFirestore(app);
-  console.log('[Firebase] Auth and Firestore initialized');
 }
 
 // App ID untuk folder database
