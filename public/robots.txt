@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
-Allow: /login
-Allow: /dashboard
+
 
 Sitemap: https://habit-tracker-cino.vercel.app/sitemap.xml
