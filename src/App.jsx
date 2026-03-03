@@ -16,7 +16,6 @@ export default function App() {
   const { 
     user, 
     isLoading, 
-    setIsLoading,
     loginError, 
     handleGoogleLogin, 
     handleAnonymousLogin, 
@@ -46,7 +45,6 @@ export default function App() {
           <ProtectedRoute user={user} isLoading={isLoading}>
             <Dashboard 
               user={user}
-              setIsLoading={setIsLoading}
               onLogout={handleLogout}
             />
           </ProtectedRoute>

@@ -7,8 +7,9 @@ import { db, APP_ID } from '../config/firebase';
 import { ACTIVITIES } from '../constants';
 import { formatDateKey } from '../utils/dateUtils';
 
-export const useHabitData = (user, setIsLoading) => {
+export const useHabitData = (user) => {
   const [data, setData] = useState({});
+  const [isDataLoading, setIsDataLoading] = useState(true);
   const [syncStatus, setSyncStatus] = useState('synced');
   const [fatalError, setFatalError] = useState(null);
 
@@ -16,10 +17,11 @@ export const useHabitData = (user, setIsLoading) => {
   useEffect(() => {
     if (!user) {
       setData({});
+      setIsDataLoading(false);
       return;
     }
 
-    setIsLoading(true);
+    setIsDataLoading(true);
     const docRef = doc(db, 'artifacts', APP_ID, 'users', user.uid, 'habits', 'tracking_data');
     
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
@@ -28,18 +30,18 @@ export const useHabitData = (user, setIsLoading) => {
       } else {
         setData({});
       }
-      setIsLoading(false);
+      setIsDataLoading(false);
       setSyncStatus('synced');
       setFatalError(null);
     }, (error) => {
       console.error("Firestore error:", error);
       setSyncStatus('error');
       setFatalError(error.code || error.message);
-      setIsLoading(false);
+      setIsDataLoading(false);
     });
 
     return () => unsubscribe();
-  }, [user, setIsLoading]);
+  }, [user]);
 
   // Toggle aktivitas dan simpan ke Firestore
   const toggleActivity = async (dateKey, activity) => {
@@ -104,6 +106,7 @@ export const useHabitData = (user, setIsLoading) => {
 
   return {
     data,
+    isDataLoading,
     syncStatus,
     fatalError,
     setFatalError,

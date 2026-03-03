@@ -16,7 +16,7 @@ import {
   SummaryView
 } from '../components';
 
-export default function Dashboard({ user, setIsLoading, onLogout }) {
+export default function Dashboard({ user, onLogout }) {
   // Generate data bulan
   const { monthName, weeks, todayKey } = useMemo(() => generateMonthData(), []);
 
@@ -31,6 +31,7 @@ export default function Dashboard({ user, setIsLoading, onLogout }) {
 
   const {
     data,
+    isDataLoading,
     syncStatus,
     fatalError,
     setFatalError,
@@ -39,7 +40,12 @@ export default function Dashboard({ user, setIsLoading, onLogout }) {
     calculateTotalAll,
     getWeeklyStats,
     getActivityTotalAcrossWeeks
-  } = useHabitData(user, setIsLoading);
+  } = useHabitData(user);
+
+  // --- Tampilan Loading Data ---
+  if (isDataLoading) {
+    return <LoadingScreen />;
+  }
 
   // --- Tampilan Error Fatal ---
   if (fatalError) {
@@ -48,7 +54,6 @@ export default function Dashboard({ user, setIsLoading, onLogout }) {
         fatalError={fatalError} 
         onBack={() => {
           setFatalError(null);
-          setIsLoading(false);
         }} 
       />
     );
